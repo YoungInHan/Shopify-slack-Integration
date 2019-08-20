@@ -1,0 +1,63 @@
+<head>
+  <title>My Shopify App</title>
+  <link
+    rel="stylesheet"
+    type="text/css"
+    href="{{ url_for('static', filename='css/styles.css') }}"
+  />
+  <link
+    rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.8.2/css/all.min.css"
+  />
+</head>
+
+<h1>Settings</h1>
+<h4>Toggle your Shopify store webhooks! :)</h4>
+<form method="post">
+  {% for webhook_checkbox in webhook_checkboxes %}
+  <input
+    type="checkbox"
+    name="{{ webhook_checkbox[0] }}"
+    value="{{ webhook_checkbox[0] }}"
+    {%
+    if
+    webhook_checkbox[1]
+    %}checked{%
+    endif
+    %}
+  />
+  {{ webhook_checkbox[0] }}<br />
+  {% endfor %}
+  <div class="btn">
+    <button id="submit-btn" onclick="addLoadSpinner()" type="submit">
+      Submit
+    </button>
+  </div>
+</form>
+{% with messages = get_flashed_messages() %} {% if messages %} {% for message in
+messages %}
+<p class="verification-msg">
+  {{ message }}
+</p>
+{% endfor %} {% endif %} {% endwith %}
+<br />
+<button onclick="return confirm_delete()" class="remove-btn">
+  Remove your connection
+</button>
+
+<script>
+  function addLoadSpinner() {
+    document.getElementById("submit-btn").innerHTML =
+      "<i class='fas fa-circle-notch fa-spin'></i>   Submit ";
+  }
+  function confirm_delete() {
+    if (confirm("Are you sure you want to delete this bare sick app?")) {
+      const Http = new XMLHttpRequest();
+      const url = window.location.href;
+      Http.open("DELETE", url);
+      Http.send();
+    } else {
+      return false;
+    }
+  }
+</script>
